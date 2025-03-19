@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "entrecore-auth-core"
+version = "0.1.0"
+description = "Shared authentication models for microservices"
+authors = ["Anthony Oliko <anthonyoliko@punch.agency>"]
+readme = "README.md"
+license = "MIT"
+packages = [{include = "entrecore_auth_core", from = "src"}]
+
+[tool.poetry.dependencies]
+python = ">=3.7"
+pydantic = "^2.0"
+email-validator = "^2.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.0"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+
+
+
+
