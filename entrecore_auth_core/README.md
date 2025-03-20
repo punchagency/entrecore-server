@@ -76,6 +76,24 @@ poetry install
 poetry run pytest
 ```
 
+## Debugging
+
+- If a change is made to the package and it is not reflecting in the auth_service, you can do the following:
+
+```bash
+# Build the package
+poetry build
+
+# Navigate to the auth_service directory
+cd ../auth_service
+
+# Uninstall the existing package
+poetry remove entrecore-auth-core
+
+# Reinstall the package with the latest changes
+poetry add ../entrecore_auth_core
+```
+
 ## Documentation
 
 For detailed documentation on all features and security best practices, please visit our [documentation page](docs/).

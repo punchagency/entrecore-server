@@ -1,0 +1,654 @@
+{
+  "info": {
+    "name": "Entrecore Auth Service API",
+    "description": "Authentication Service API for Entrecore Platform",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "User Registration",
+      "item": [
+        {
+          "name": "Initial Signup",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"phone_number\": \"+254712345678\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/signup",
+              "host": ["{{baseUrl}}"],
+              "path": ["signup"]
+            },
+            "description": "First step of the user registration process. Collects basic user information."
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"phone_number\": \"+254712345678\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/signup",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["signup"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"User information collected\",\n  \"email\": \"john.doe@example.com\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Complete Signup",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"SecurePassword123!\",\n  \"confirm_password\": \"SecurePassword123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/signup/set-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["signup", "set-password"]
+            },
+            "description": "Second step of the user registration process. Sets the user's password and completes the registration."
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"SecurePassword123!\",\n  \"confirm_password\": \"SecurePassword123!\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/signup/set-password",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["signup", "set-password"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"fbc11f02-e64d-421a-b3ab-413fed0b5b89\",\n  \"email\": \"john.doe@example.com\",\n  \"username\": \"johndoe\",\n  \"full_name\": \"John Doe\",\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\",\n  \"disabled\": false,\n  \"roles\": [\"user\"],\n  \"created_at\": \"2023-09-15T12:34:56Z\",\n  \"last_login\": \"2023-09-15T12:34:56Z\",\n  \"email_verified\": false\n}"
+            }
+          ]
+        },
+        {
+          "name": "Signup with Google",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"google_oauth_token_here\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/signup/google",
+              "host": ["{{baseUrl}}"],
+              "path": ["signup", "google"]
+            },
+            "description": "Register a new user with Google OAuth token or login an existing user."
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"token\": \"google_oauth_token_here\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/signup/google",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["signup", "google"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"fbc11f02-e64d-421a-b3ab-413fed0b5b89\",\n  \"email\": \"google_user@example.com\",\n  \"username\": \"googleuser\",\n  \"full_name\": \"Google User\",\n  \"first_name\": \"Google\",\n  \"last_name\": \"User\",\n  \"disabled\": false,\n  \"roles\": [\"user\"],\n  \"created_at\": \"2023-09-15T12:34:56Z\",\n  \"last_login\": \"2023-09-15T12:34:56Z\",\n  \"email_verified\": true,\n  \"access_token\": \"eyJhbGci...\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "username",
+                  "value": "john.doe@example.com",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "SecurePassword123!",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/token",
+              "host": ["{{baseUrl}}"],
+              "path": ["token"]
+            },
+            "description": "Authenticate a user and get access and refresh tokens."
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/x-www-form-urlencoded"
+                  }
+                ],
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "key": "username",
+                      "value": "john.doe@example.com",
+                      "type": "text"
+                    },
+                    {
+                      "key": "password",
+                      "value": "SecurePassword123!",
+                      "type": "text"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/token",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["token"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"access_token\": \"eyJhbGci...\",\n  \"token_type\": \"bearer\",\n  \"expires_at\": \"2023-09-15T13:34:56Z\",\n  \"refresh_token\": \"eyJhbGci...\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"refresh_token_here\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/refresh-token",
+              "host": ["{{baseUrl}}"],
+              "path": ["refresh-token"]
+            },
+            "description": "Get a new access token using a refresh token."
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"token\": \"refresh_token_here\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/refresh-token",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["refresh-token"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"access_token\": \"eyJhbGci...\",\n  \"token_type\": \"bearer\",\n  \"expires_at\": \"2023-09-15T14:34:56Z\",\n  \"refresh_token\": \"eyJhbGci...\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["logout"]
+            },
+            "description": "Logout a user by invalidating their token."
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/logout",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["logout"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Successfully logged out\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "User Management",
+      "item": [
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "me"]
+            },
+            "description": "Get information about the currently authenticated user."
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/users/me",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["users", "me"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"fbc11f02-e64d-421a-b3ab-413fed0b5b89\",\n  \"email\": \"john.doe@example.com\",\n  \"username\": \"johndoe\",\n  \"full_name\": \"John Doe\",\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\",\n  \"disabled\": false,\n  \"roles\": [\"user\"],\n  \"created_at\": \"2023-09-15T12:34:56Z\",\n  \"last_login\": \"2023-09-15T12:34:56Z\",\n  \"email_verified\": false\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update User Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"full_name\": \"John D. Doe\",\n  \"first_name\": \"John\",\n  \"last_name\": \"D. Doe\",\n  \"email\": \"john.d.doe@example.com\",\n  \"phone_number\": \"+254712345679\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "me"]
+            },
+            "description": "Update the current user's profile information."
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"full_name\": \"John D. Doe\",\n  \"first_name\": \"John\",\n  \"last_name\": \"D. Doe\",\n  \"email\": \"john.d.doe@example.com\",\n  \"phone_number\": \"+254712345679\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/users/me",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["users", "me"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"fbc11f02-e64d-421a-b3ab-413fed0b5b89\",\n  \"email\": \"john.d.doe@example.com\",\n  \"username\": \"johndoe\",\n  \"full_name\": \"John D. Doe\",\n  \"first_name\": \"John\",\n  \"last_name\": \"D. Doe\",\n  \"disabled\": false,\n  \"roles\": [\"user\"],\n  \"created_at\": \"2023-09-15T12:34:56Z\",\n  \"last_login\": \"2023-09-15T12:34:56Z\",\n  \"email_verified\": false\n}"
+            }
+          ]
+        },
+        {
+          "name": "Verify Email",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/verify-email/{token}",
+              "host": ["{{baseUrl}}"],
+              "path": ["verify-email", "{token}"],
+              "variable": [
+                {
+                  "key": "token",
+                  "value": "verification_token_here",
+                  "description": "Email verification token"
+                }
+              ]
+            },
+            "description": "Verify a user's email address using the verification token."
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/verify-email/{token}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["verify-email", "{token}"],
+                  "variable": [
+                    {
+                      "key": "token",
+                      "value": "verification_token_here"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Email successfully verified\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Password Management",
+      "item": [
+        {
+          "name": "Request Password Reset",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/password-reset/request?email=john.doe@example.com",
+              "host": ["{{baseUrl}}"],
+              "path": ["password-reset", "request"],
+              "query": [
+                {
+                  "key": "email",
+                  "value": "john.doe@example.com"
+                }
+              ]
+            },
+            "description": "Request a password reset token for a registered email."
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/password-reset/request?email=john.doe@example.com",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["password-reset", "request"],
+                  "query": [
+                    {
+                      "key": "email",
+                      "value": "john.doe@example.com"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"reset_token\": \"eyJhbGci...\",\n  \"message\": \"Reset token generated\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Confirm Password Reset",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/password-reset/confirm?token=reset_token_here&new_password=NewSecurePassword123!&confirm_new_password=NewSecurePassword123!",
+              "host": ["{{baseUrl}}"],
+              "path": ["password-reset", "confirm"],
+              "query": [
+                {
+                  "key": "token",
+                  "value": "reset_token_here"
+                },
+                {
+                  "key": "new_password",
+                  "value": "NewSecurePassword123!"
+                },
+                {
+                  "key": "confirm_new_password",
+                  "value": "NewSecurePassword123!"
+                }
+              ]
+            },
+            "description": "Reset a user's password using the reset token."
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/password-reset/confirm?token=reset_token_here&new_password=NewSecurePassword123!&confirm_new_password=NewSecurePassword123!",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["password-reset", "confirm"],
+                  "query": [
+                    {
+                      "key": "token",
+                      "value": "reset_token_here"
+                    },
+                    {
+                      "key": "new_password",
+                      "value": "NewSecurePassword123!"
+                    },
+                    {
+                      "key": "confirm_new_password",
+                      "value": "NewSecurePassword123!"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Password updated successfully\"\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+} 

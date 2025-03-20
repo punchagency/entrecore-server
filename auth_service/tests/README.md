@@ -1,0 +1,1 @@
+1. Run the tests: `poetry run pytest tests/test_auth_flow.py -v`

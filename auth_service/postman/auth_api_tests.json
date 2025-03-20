@@ -1,0 +1,724 @@
+{
+  "info": {
+    "name": "Entrecore Auth Service API Tests",
+    "description": "Tests for the Entrecore Auth Service API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "testUserEmail",
+      "value": "test_{{$guid}}@example.com",
+      "type": "string"
+    },
+    {
+      "key": "testFirstName",
+      "value": "Test{{$randomInt}}",
+      "type": "string"
+    },
+    {
+      "key": "testLastName",
+      "value": "User{{$randomInt}}",
+      "type": "string"
+    },
+    {
+      "key": "accessToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "refreshToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "resetToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "googleUserId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "googleToken",
+      "value": "mock_google_token_12345",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "User Registration",
+      "item": [
+        {
+          "name": "1. Initial Signup",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"{{testFirstName}}\",\n  \"last_name\": \"{{testLastName}}\",\n  \"email\": \"{{testUserEmail}}\",\n  \"phone_number\": \"+254712345678\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/signup",
+              "host": ["{{baseUrl}}"],
+              "path": ["signup"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains expected fields\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.message).to.eql(\"User information collected\");",
+                  "    pm.expect(jsonData.email).to.eql(pm.variables.get(\"testUserEmail\"));",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "2. Complete Signup",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{testUserEmail}}\",\n  \"password\": \"SecurePassword123!\",\n  \"confirm_password\": \"SecurePassword123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/signup/set-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["signup", "set-password"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains user data\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.email).to.eql(pm.variables.get(\"testUserEmail\"));",
+                  "    pm.expect(jsonData.id).to.be.a('string');",
+                  "    pm.expect(jsonData.email_verified).to.eql(false);",
+                  "    pm.expect(jsonData.first_name).to.eql(pm.variables.get(\"testFirstName\"));",
+                  "    pm.expect(jsonData.last_name).to.eql(pm.variables.get(\"testLastName\"));",
+                  "    pm.expect(jsonData.full_name).to.eql(pm.variables.get(\"testFirstName\") + \" \" + pm.variables.get(\"testLastName\"));",
+                  "    ",
+                  "    // Store user ID for future tests",
+                  "    pm.variables.set(\"userId\", jsonData.id);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "1. Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "username",
+                  "value": "{{testUserEmail}}",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "SecurePassword123!",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/token",
+              "host": ["{{baseUrl}}"],
+              "path": ["token"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains token data\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.access_token).to.be.a('string');",
+                  "    pm.expect(jsonData.token_type).to.eql('bearer');",
+                  "    ",
+                  "    // Store tokens for subsequent tests",
+                  "    pm.variables.set(\"accessToken\", jsonData.access_token);",
+                  "    if (jsonData.refresh_token) {",
+                  "        pm.variables.set(\"refreshToken\", jsonData.refresh_token);",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "2. Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/refresh-token?token={{refreshToken}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["refresh-token"],
+              "query": [
+                {
+                  "key": "token",
+                  "value": "{{refreshToken}}"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains token data\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.access_token).to.be.a('string');",
+                  "    ",
+                  "    // Update access token",
+                  "    pm.variables.set(\"accessToken\", jsonData.access_token);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "3. Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["logout"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response indicates successful logout\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.message).to.include(\"Successfully\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "4. Verify Token Invalidated",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "me"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 401 (Unauthorized)\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Google Authentication",
+      "item": [
+        {
+          "name": "1. Signup with Google",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"{{googleToken}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/signup/google",
+              "host": ["{{baseUrl}}"],
+              "path": ["signup", "google"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains user data\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    ",
+                  "    // Store Google user ID",
+                  "    pm.variables.set(\"googleUserId\", jsonData.id);",
+                  "    ",
+                  "    pm.expect(jsonData.id).to.be.a('string');",
+                  "    pm.expect(jsonData.email).to.be.a('string');",
+                  "    pm.expect(jsonData.email_verified).to.eql(true);",
+                  "    pm.expect(jsonData.first_name).to.be.a('string');",
+                  "    pm.expect(jsonData.last_name).to.be.a('string');",
+                  "    pm.expect(jsonData.full_name).to.eql(jsonData.first_name + \" \" + jsonData.last_name);",
+                  "    ",
+                  "    // Store access token if present",
+                  "    if (jsonData.access_token) {",
+                  "        pm.variables.set(\"googleUserToken\", jsonData.access_token);",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "2. Login with Google (Existing User)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"{{googleToken}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/signup/google",
+              "host": ["{{baseUrl}}"],
+              "path": ["signup", "google"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains same user ID\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.id).to.eql(pm.variables.get(\"googleUserId\"));",
+                  "    pm.expect(jsonData.email_verified).to.eql(true);",
+                  "    ",
+                  "    // Update token if present",
+                  "    if (jsonData.access_token) {",
+                  "        pm.variables.set(\"googleUserToken\", jsonData.access_token);",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "User Management",
+      "item": [
+        {
+          "name": "1. Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "me"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains user data\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.email).to.eql(pm.variables.get(\"testUserEmail\"));",
+                  "    pm.expect(jsonData.first_name).to.eql(pm.variables.get(\"testFirstName\"));",
+                  "    pm.expect(jsonData.last_name).to.eql(pm.variables.get(\"testLastName\"));",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "2. Update User Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"full_name\": \"Updated Test User\",\n  \"first_name\": \"tested\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "me"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response reflects updated profile\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.full_name).to.eql(\"Updated Test User\");",
+                  "    pm.expect(jsonData.first_name).to.eql(\"tested\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "3. Verify Email",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/verify-email/test-verification-token",
+              "host": ["{{baseUrl}}"],
+              "path": ["verify-email", "test-verification-token"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Check if endpoint exists - could be 200, 400, or 404",
+                  "pm.test(\"Endpoint responds\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 400, 404]);",
+                  "});",
+                  "",
+                  "// If it's 404, endpoint not implemented yet",
+                  "if (pm.response.code === 404) {",
+                  "    console.log(\"Email verification endpoint not implemented yet\");",
+                  "}",
+                  "",
+                  "// For 200 or 400, verify response format",
+                  "if (pm.response.code === 200 || pm.response.code === 400) {",
+                  "    pm.test(\"Response has message field\", function () {",
+                  "        var jsonData = pm.response.json();",
+                  "        pm.expect(jsonData.message).to.be.a('string');",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Password Reset",
+      "item": [
+        {
+          "name": "1. Request Password Reset",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/password-reset/request?email={{testUserEmail}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["password-reset", "request"],
+              "query": [
+                {
+                  "key": "email",
+                  "value": "{{testUserEmail}}"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains reset token\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.reset_token).to.be.a('string');",
+                  "    ",
+                  "    // Store reset token",
+                  "    pm.variables.set(\"resetToken\", jsonData.reset_token);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "2. Confirm Password Reset",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/password-reset/confirm?token={{resetToken}}&new_password=NewSecurePassword123!&confirm_new_password=NewSecurePassword123!",
+              "host": ["{{baseUrl}}"],
+              "path": ["password-reset", "confirm"],
+              "query": [
+                {
+                  "key": "token",
+                  "value": "{{resetToken}}"
+                },
+                {
+                  "key": "new_password",
+                  "value": "NewSecurePassword123!"
+                },
+                {
+                  "key": "confirm_new_password",
+                  "value": "NewSecurePassword123!"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "3. Login with New Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "username",
+                  "value": "{{testUserEmail}}",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "NewSecurePassword123!",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/token",
+              "host": ["{{baseUrl}}"],
+              "path": ["token"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Login with new password successful\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.access_token).to.be.a('string');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "4. Test Password Mismatch",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/password-reset/confirm?token={{resetToken}}&new_password=NewPassword123!&confirm_new_password=DifferentPassword123!",
+              "host": ["{{baseUrl}}"],
+              "path": ["password-reset", "confirm"],
+              "query": [
+                {
+                  "key": "token",
+                  "value": "{{resetToken}}"
+                },
+                {
+                  "key": "new_password",
+                  "value": "NewPassword123!"
+                },
+                {
+                  "key": "confirm_new_password",
+                  "value": "DifferentPassword123!"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"Response indicates password mismatch\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.detail).to.include(\"Passwords do not match\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
