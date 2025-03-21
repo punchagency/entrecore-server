@@ -13,6 +13,9 @@ This shows tasks per role from the project task list and presents corresponding 
 - Integrate with PostgreSQL and Azure Blob Storage.
 - Write unit and integration tests.
 
+### This role should also be focused on orchestrating and transforming terabytes of data from lakhouses into real-time
+databases (ClickHouse, DuckDB, StarTree/Pinot, StaRocks), doing so with modern tooling (Dagster Labs, Astronomer, Tobiko), and optimizing data models for high performance to power exploratory dashboards.
+
 ### Architectural Diagram
 ```plaintext
 +-----------------------------------------------------------+

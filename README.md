@@ -14,7 +14,7 @@ The platform follows a microservices architecture, with each service handling a 
 ## Repository Structure
 
 ```
-punch-entrecore/
+entrecore-server/
 ├── auth_service/            # Authentication service
 ├── entrecore_auth_core/     # Shared authentication library
 ├── architecture.md          # System architecture documentation
