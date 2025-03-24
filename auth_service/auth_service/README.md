@@ -64,18 +64,15 @@ Authentication microservice for the Entrecore platform.
     poetry run alembic upgrade head
     ```
 
-2. Run the following command in the `auth_service` sub-directory, (i.e this directory) to start the service:
+3. Run the following command in the `auth_service` sub-directory, (i.e this directory) to start the service:
 
     ```bash
     poetry run uvicorn main:app --reload
 
 ### Using Docker 
 
-1. Build and start the service:
-    ```bash
-    docker-compose up --build
-    ```
+Please refer to the [README.md](/dockerREADME.md) in the root directory for instructions on running the service with Docker.
 
-2. Access the API at http://localhost:8000
+4. Access the API at http://localhost:8000
 
-3. API documentation available at http://localhost:8000/docs
+5. #TODO: API documentation available at http://localhost:8000/docs

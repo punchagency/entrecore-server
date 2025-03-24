@@ -531,3 +531,13 @@ async def update_user(
         last_login=db_user.last_login,
         email_verified=db_user.email_verified
     )
+
+@app.get("/health")
+def health_check():
+    return {"status": "healthy"}
+
+@app.get("/db-check")
+def db_connection_check(db = Depends(get_db)):
+    # Simply using the db dependency will check the connection
+    # If it fails, FastAPI will return an error
+    return {"database": "connected"}

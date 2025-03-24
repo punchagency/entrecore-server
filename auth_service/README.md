@@ -188,24 +188,6 @@ Run specific tests with:
 poetry run pytest tests/test_auth_flow.py -v
 ```
 
-## Docker Deployment
-
-### Building the Docker Image
-
-```bash
-# From the auth_service directory
-docker build -t auth-service:latest .
-
-# Or from the project root
-docker build -t auth-service:latest ./auth_service
-```
-
-### Running with Docker Compose
-
-```bash
-docker-compose up -d
-```
-
 This will start the service along with a PostgreSQL database. Access the API at http://localhost:8000 and the interactive documentation at http://localhost:8000/docs.
 
 ## Security Considerations
@@ -219,18 +201,9 @@ The auth service implements several security best practices:
 - Protection against brute force attacks
 - Separation of access and refresh tokens
 
-## For Production Environments
+## Running with Docker
 
-For production deployment, consider implementing:
-
-- **OAuth/OIDC Integration**: Enable login with Azure AD, Google Workspace, etc.
-- **Multi-Factor Authentication**: Implement TOTP or SMS verification
-- **Password Policies**: Enforce strength requirements and expiration
-- **Account Lockout**: Protect against brute force attacks
-- **Audit Logging**: Track authentication events
-- **Rate Limiting**: Prevent abuse of authentication endpoints
-- **Redis for Token Storage**: Replace in-memory blacklist with Redis
-- **HTTPS**: Ensure all traffic is encrypted
+Please refer to the [README.md](/dockerREADME.md) in the root directory for instructions on running the service with Docker.
 
 ## License
 
