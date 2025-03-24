@@ -9,6 +9,7 @@ PUNCH-ENTRECORE is a comprehensive backend platform designed to serve as a found
 The platform follows a microservices architecture, with each service handling a specific domain of functionality:
 
 - **Auth Service**: Authentication and user management service
+- **Data Ingestion Service**: Service for connecting to ERP platforms (primarily NetSuite), extracting data, profiling it, and storing both the data and its metadata in a structured repository
 - **Entrecore Auth Core**: Shared authentication library used across services
 
 ## Repository Structure
@@ -16,6 +17,7 @@ The platform follows a microservices architecture, with each service handling a 
 ```
 entrecore-server/
 ├── auth_service/            # Authentication service
+├── data_ingestion_service/  # Data extraction and profiling service
 ├── entrecore_auth_core/     # Shared authentication library
 ├── architecture.md          # System architecture documentation
 ├── architecture_per_role.md # Role-specific architecture details
@@ -30,6 +32,7 @@ entrecore-server/
 - Poetry (dependency management)
 - PostgreSQL
 - Git
+- Docker & Docker Compose
 
 ### Cloning the Repository
 
@@ -37,6 +40,17 @@ entrecore-server/
 git clone https://github.com/punchagency/entrecore-server.git
 cd entrecore-server
 ```
+
+### Running the Services
+
+You can run all services using Docker Compose:
+
+```bash
+cd auth_service
+docker-compose up --build
+```
+
+This will start the Auth Service, Data Ingestion Service, and a PostgreSQL database.
 
 ## Auth Service
 
@@ -50,6 +64,18 @@ The Authentication Service provides a complete authentication and user managemen
 - Email verification
 
 For detailed setup instructions and API documentation, see the [Auth Service README](auth_service/README.md).
+
+## Data Ingestion Service
+
+The Data Ingestion Service is responsible for connecting to ERP platforms (primarily NetSuite), extracting data, profiling it, and storing both the data and its metadata in a structured repository. Key features include:
+
+- NetSuite SuiteTalk API integration
+- Metadata repository for schema tracking
+- Data profiling and statistical analysis
+- Incremental data processing
+- Event-driven architecture for downstream processing
+
+For detailed setup and implementation roadmap, see the [Data Ingestion Service README](data_ingestion_service/README.md).
 
 ## Entrecore Auth Core Library
 
