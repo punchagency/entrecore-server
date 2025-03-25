@@ -41,9 +41,23 @@ git clone https://github.com/punchagency/entrecore-server.git
 cd entrecore-server
 ```
 
+### Create .env file
+
+```bash
+cp .env.example .env
+```
+
 ### Running the Services
 
 You can run all services using Docker Compose:
+
+First create your .env file:
+
+```bash
+cp .env.example .env
+```
+
+Then run the services:
 
 ```bash
 cd auth_service
