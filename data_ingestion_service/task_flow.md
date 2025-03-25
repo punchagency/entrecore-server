@@ -528,6 +528,7 @@ This document outlines the detailed workflow and tasks for implementing the Data
 - **Languages**: Python, TypeScript
 - **Frameworks**: FastAPI, SQLAlchemy
 - **Cloud**: Azure (AKS, Functions, Key Vault, SQL DB, Blob Storage)
+- **Database**: MySQL 8.0
 - **Data Processing**: Apache Spark, Pandas
 - **Messaging**: Azure Event Hub
 - **CI/CD**: Azure DevOps, GitHub Actions

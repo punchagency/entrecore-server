@@ -12,7 +12,9 @@ services:
     networks:
       - app_network
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    restart: on-failure
 
   data_ingestion_service:
     build:
@@ -31,21 +33,28 @@ services:
       - auth_service
 
   db:
-    image: postgres:15
+    image: mysql:8.0
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - mysql_data:/var/lib/mysql
     environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     ports:
-      - "5432:5432"
+      - "3306:3306"
     networks:
       - app_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
 networks:
   app_network:
     driver: bridge
 
 volumes:
-  postgres_data:
+  mysql_data:

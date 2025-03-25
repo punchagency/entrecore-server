@@ -50,6 +50,36 @@ cd auth_service
 docker-compose up --build
 ```
 
+### Running the Services after making changes
+
+```bash
+docker-compose down
+docker-compose up --build
+```
+
+```bash
+# Build the containers (rebuilds any services that have changed)
+docker-compose build
+
+# Start the containers in detached mode (runs in the background)
+docker-compose up -d
+
+# To see logs from all services
+docker-compose logs
+
+# Or to see logs from a specific service
+docker-compose logs auth_service
+
+# If you want to build and start in one command, you can use:
+docker-compose up --build
+
+# To verify that the services are running
+docker-compose ps
+
+# To restart a service
+docker-compose restart auth_service
+```
+
 This will start the Auth Service, Data Ingestion Service, and a PostgreSQL database.
 
 ## Auth Service
