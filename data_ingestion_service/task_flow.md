@@ -31,8 +31,8 @@ This document outlines the detailed workflow and tasks for implementing the Data
 ### 1.3 Infrastructure Setup
 | ID | Task | Description | Priority |
 |---|---|---|---|
-| 1.3.1 | Azure Resource Setup | Provision Azure resource group and initial resources | High |
-| 1.3.2 | Network Configuration | Configure networking and security groups | High |
+| 1.3.1 | Azure Resource Setup | Provision Azure resource group and initial resources, including VPN Gateway | High |
+| 1.3.2 | Network Configuration | Configure networking, security groups, and Azure DNS | High |
 | 1.3.3 | Dev/Test Environment | Set up development and testing environments | Medium |
 | 1.3.4 | CI/CD Pipeline Base | Configure basic pipeline for automated testing | Medium |
 
@@ -48,7 +48,7 @@ This document outlines the detailed workflow and tasks for implementing the Data
 | ID | Task | Description | Priority |
 |---|---|---|---|
 | 2.1.1 | OAuth Flow | Implement OAuth authentication flow | High |
-| 2.1.2 | Credential Storage | Integrate with Key Vault for credential storage | High |
+| 2.1.2 | Credential Storage | Integrate with Azure Key Vault for credential storage | High |
 | 2.1.3 | Token Management | Implement token caching and refresh | Medium |
 | 2.1.4 | Connection Testing | Create connection testing functionality | Medium |
 
@@ -72,7 +72,7 @@ This document outlines the detailed workflow and tasks for implementing the Data
 | ID | Task | Description | Priority |
 |---|---|---|---|
 | 3.0.1 | Repository Architecture | Design repository architecture and interfaces | High |
-| 3.0.2 | Database Schema | Implement SQL schema for metadata storage | High |
+| 3.0.2 | Database Schema | Implement SQL schema for metadata storage, including Oracle Database integration | High |
 | 3.0.3 | ORM Integration | Configure ORM for metadata entity mapping | Medium |
 | 3.0.4 | Migration Strategy | Implement schema migration strategy | Medium |
 
@@ -103,7 +103,7 @@ This document outlines the detailed workflow and tasks for implementing the Data
 ### 4.0 Data Extraction Pipeline
 | ID | Task | Description | Priority |
 |---|---|---|---|
-| 4.0.1 | Pipeline Architecture | Design extraction pipeline architecture | High |
+| 4.0.1 | Pipeline Architecture | Design extraction pipeline architecture with cross-cloud capabilities | High |
 | 4.0.2 | Job Scheduling | Implement job scheduling system | High |
 | 4.0.3 | Extraction Workflow | Implement extraction workflow orchestration | High |
 | 4.0.4 | Monitoring Integration | Integrate pipeline with monitoring system | Medium |
