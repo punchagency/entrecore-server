@@ -41,20 +41,24 @@ git clone https://github.com/punchagency/entrecore-server.git
 cd entrecore-server
 ```
 
-### Create .env file
-
-```bash
-cp .env.example .env
-```
-
 ### Running the Services
 
 You can run all services using Docker Compose:
 
-First create your .env file:
+First create your .env file in the auth_service directory and fill it with the correct values, e.g:
 
-```bash
-cp .env.example .env
+```
+# Database settings - PostgreSQL container
+MYSQL_USER=auth_user
+MYSQL_PASSWORD=your_mysql_root_password
+MYSQL_DATABASE=auth_db
+MYSQL_ROOT_PASSWORD=your_mysql_root_password
+
+# JWT settings
+JWT_SECRET_KEY=your_secret_key_here
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+REFRESH_TOKEN_EXPIRE_DAYS=7
 ```
 
 Then run the services:
@@ -62,6 +66,24 @@ Then run the services:
 ```bash
 cd auth_service
 docker-compose up --build
+```
+
+This will:
+- Create a local MySQL database container
+- Build and start the auth_service
+- Set up the networking between services
+- Mount volumes for data persistence
+
+Next, run the database migrations:
+
+```bash
+docker-compose exec auth_service alembic upgrade head
+```
+
+Then, verify that the services are running:
+
+```bash
+docker-compose ps
 ```
 
 ### Running the Services after making changes
