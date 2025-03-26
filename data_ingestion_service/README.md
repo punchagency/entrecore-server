@@ -209,25 +209,25 @@ DataSource
 
 See the detailed implementation plan in [task_flow.md](./task_flow.md) which outlines the phased approach:
 
-### Phase 1: Foundation (Weeks 1-4)
+### Phase 1: Foundation
 - Project initialization and infrastructure setup
 - Core NetSuite connector with basic authentication
 - Initial metadata repository schema
 - Basic data extraction capabilities
 
-### Phase 2: Core Functionality (Weeks 5-8)
+### Phase 2: Core Functionality
 - Complete NetSuite connector with advanced features
 - Full metadata repository implementation
 - Incremental data processing
 - Basic data profiling capabilities
 
-### Phase 3: Advanced Features (Weeks 9-12)
+### Phase 3: Advanced Features
 - Advanced data profiling and quality checks
 - Event system implementation
 - API layer deployment
 - Security hardening
 
-### Phase 4: Finalization (Weeks 13-16)
+### Phase 4: Finalization
 - Comprehensive monitoring and logging
 - Performance optimization
 - Documentation completion
