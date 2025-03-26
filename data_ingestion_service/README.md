@@ -207,7 +207,7 @@ DataSource
 
 ## Implementation Roadmap
 
-See the detailed implementation plan in [task_flow.md](./task_flow.md) which outlines the phased approach over a 16-week timeline:
+See the detailed implementation plan in [task_flow.md](./task_flow.md) which outlines the phased approach:
 
 ### Phase 1: Foundation (Weeks 1-4)
 - Project initialization and infrastructure setup
