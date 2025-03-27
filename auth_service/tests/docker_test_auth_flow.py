@@ -10,7 +10,7 @@ client = TestClient(app)
 
 def test_docker_health_check():
     """Verify basic API health check endpoint"""
-    response = client.get("/health")
+    response = client.get("/api/v1/health")
     assert response.status_code == 200
     assert response.json() == {"status": "healthy"}
 
@@ -18,7 +18,7 @@ def test_docker_db_connection():
     """Test database connection in Docker environment"""
     # This assumes you have a DB connection check endpoint
     # If you don't have one, you could create a simple one
-    response = client.get("/db-check")
+    response = client.get("/api/v1/db-check")
     assert response.status_code == 200
     assert response.json()["database"] == "connected"
 

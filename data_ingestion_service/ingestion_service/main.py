@@ -8,19 +8,19 @@ app = FastAPI(title="Data Ingestion Service",
               version="0.1.0")
 auth_validator = AuthValidator()
 
-@app.get("/")
+@app.get("/api/v1")
 async def root():
     return {"message": "Data Ingestion Service API", "status": "online", "timestamp": datetime.now().isoformat()}
 
-@app.get("/health")
+@app.get("/api/v1/health")
 async def health_check():
     return {"status": "healthy", "timestamp": datetime.now().isoformat()}
 
-@app.get("/version")
+@app.get("/api/v1/version")
 async def version():
     return {"version": app.version}
 
-@app.get("/protected-endpoint")
+@app.get("/api/v1/protected-endpoint")
 async def protected_endpoint(user_data = Depends(auth_validator)):
     return {"message": "This is a protected endpoint", "user": user_data}
 

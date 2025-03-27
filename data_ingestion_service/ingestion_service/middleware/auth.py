@@ -13,7 +13,7 @@ class AuthValidator:
         
         async with httpx.AsyncClient() as client:
             response = await client.get(
-                f"{self.auth_service_url}/users/me",
+                f"{self.auth_service_url}/api/v1/users/me",
                 headers={"Authorization": f"Bearer {token}"}
             )
             

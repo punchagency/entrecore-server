@@ -35,7 +35,7 @@ tokens = {}
 def test_signup_initial():
     """Test first step of user signup using SignupRequest model"""
     response = client.post(
-        "/signup",
+        "/api/v1/signup",
         json=signup_data
     )
     assert response.status_code == 200
@@ -46,7 +46,7 @@ def test_signup_initial():
 def test_signup_complete():
     """Test second step of user signup using PasswordSetRequest model"""
     response = client.post(
-        "/signup/set-password",
+        "/api/v1/signup/set-password",
         json=password_data
     )
     assert response.status_code == 200
@@ -66,7 +66,7 @@ def test_signup_complete():
 def test_login_after_signup():
     """Test login after successful signup"""
     response = client.post(
-        "/token",
+        "/api/v1/token",
         data={
             "username": test_user_email,  # Email is used as the username parameter
             "password": password_data["password"],
@@ -87,7 +87,7 @@ def test_signup_with_google():
     """Test signup with Google authentication"""
     # Make a request to signup with Google
     response = client.post(
-        "/signup/google",
+        "/api/v1/signup/google",
         # Use the GoogleAuthRequest model structure
         json={"token": google_test_token}  # This matches GoogleAuthRequest model
     )
@@ -114,7 +114,7 @@ def test_google_login_existing_user():
     """Test login with Google for an existing user"""
     # Make another request with the same Google token
     response = client.post(
-        "/signup/google",
+        "/api/v1/signup/google",
         # Use the GoogleAuthRequest model structure
         json={"token": google_test_token}  # This matches GoogleAuthRequest model
     )
@@ -135,7 +135,7 @@ def test_get_current_user():
         pytest.skip("Access token not available")
     
     response = client.get(
-        "/users/me",
+        "/api/v1/users/me",
         headers={"Authorization": f"Bearer {tokens['access_token']}"}
     )
     assert response.status_code == 200
@@ -147,7 +147,7 @@ def test_get_current_user():
 def test_refresh_token():
     """Test refreshing access token"""
     response = client.post(
-        "/refresh-token",
+        "/api/v1/refresh-token",
         params={"token": tokens["refresh_token"]}
     )
     assert response.status_code == 200
@@ -161,7 +161,7 @@ def test_update_user_profile():
     new_name = "Updated Test User"
     first_name = "tested"
     response = client.put(
-        "/users/me",
+        "/api/v1/users/me",
         headers={"Authorization": f"Bearer {tokens['access_token']}"},
         json={"full_name": new_name, "first_name": first_name}
     )
@@ -173,7 +173,7 @@ def test_update_user_profile():
 def test_password_reset_request():
     """Test password reset request"""
     response = client.post(
-        "/password-reset/request",
+        "/api/v1/password-reset/request",
         params={"email": test_user_email}
     )
     assert response.status_code == 200
@@ -185,7 +185,7 @@ def test_password_reset_confirm():
     """Test password reset confirmation"""
     new_password = "NewSecurePassword123!"
     response = client.post(
-        "/password-reset/confirm",
+        "/api/v1/password-reset/confirm",
         params={
             "token": tokens["reset_token"],
             "new_password": new_password,
@@ -196,7 +196,7 @@ def test_password_reset_confirm():
     
     # Test login with new password
     response = client.post(
-        "/token",
+        "/api/v1/token",
         data={
             "username": test_user_email,
             "password": new_password
@@ -209,7 +209,7 @@ def test_password_reset_confirm_mismatch():
     """Test password reset confirmation with mismatched passwords"""
     # First request a new reset token
     response = client.post(
-        "/password-reset/request",
+        "/api/v1/password-reset/request",
         params={"email": test_user_email}
     )
     assert response.status_code == 200
@@ -217,7 +217,7 @@ def test_password_reset_confirm_mismatch():
     
     # Test with mismatched passwords
     response = client.post(
-        "/password-reset/confirm",
+        "/api/v1/password-reset/confirm",
         params={
             "token": mismatch_reset_token,
             "new_password": "NewPassword123!",
@@ -233,7 +233,7 @@ def test_verify_email():
     verification_token = "test-verification-token"
     
     # Simply make the request - the implementation should handle invalid tokens gracefully
-    response = client.post(f"/verify-email/{verification_token}")
+    response = client.post(f"/api/v1/verify-email/{verification_token}")
     
     # Check for expected response format
     # For an invalid token, it might return 400, but the important part is that the endpoint exists
@@ -256,7 +256,7 @@ def test_logout():
         pytest.skip("Access token not available")
     
     response = client.post(
-        "/logout",
+        "/api/v1/logout",
         headers={"Authorization": f"Bearer {tokens['access_token']}"}
     )
     assert response.status_code == 200
@@ -265,7 +265,7 @@ def test_logout():
     
     # Verify token is invalidated by trying to access a protected endpoint
     response = client.get(
-        "/users/me",
+        "/api/v1/users/me",
         headers={"Authorization": f"Bearer {tokens['access_token']}"}
     )
     assert response.status_code == 401 

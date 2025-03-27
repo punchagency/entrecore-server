@@ -34,7 +34,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
 REFRESH_TOKEN_EXPIRE_DAYS = os.getenv("REFRESH_TOKEN_EXPIRE_DAYS")
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/v1/token")
 
 # Helper functions
 def verify_password(plain_password, hashed_password):
@@ -47,7 +47,7 @@ token_blacklist = {}
 # This dictionary will store signup data between the two-step signup process
 signup_temp_storage: Dict[str, Dict[str, Any]] = {}
 
-@app.post("/logout")
+@app.post("/api/v1/logout")
 async def logout(token: str = Depends(oauth2_scheme)):
     """Logout a user by invalidating their token"""
     try:
@@ -142,7 +142,7 @@ def create_access_token(data: dict, expires_delta: timedelta):
     return encoded_jwt
 
 # Step 1: Initial signup
-@app.post("/signup", response_model=dict)
+@app.post("/api/v1/signup", response_model=dict)
 async def signup_initial(signup_data: SignupRequest, db: Session = Depends(get_db)):
     """First step of signup - collect user information"""
     # Check if user exists
@@ -161,7 +161,7 @@ async def signup_initial(signup_data: SignupRequest, db: Session = Depends(get_d
     return {"message": "User information collected", "email": signup_data.email}
 
 # Step 2: Password creation
-@app.post("/signup/set-password", response_model=User)
+@app.post("/api/v1/signup/set-password", response_model=User)
 async def signup_complete(password_data: PasswordSetRequest, db: Session = Depends(get_db)):
     """Second step of signup - set password and create account"""
     # Check if user with email exists
@@ -231,7 +231,7 @@ async def signup_complete(password_data: PasswordSetRequest, db: Session = Depen
         email_verified=db_user.email_verified
     )
 
-@app.post("/signup/google", response_model=User)
+@app.post("/api/v1/signup/google", response_model=User)
 async def signup_with_google(google_data: GoogleAuthRequest, db: Session = Depends(get_db)):
     """Sign up using Google authentication"""
     try:
@@ -319,7 +319,7 @@ async def signup_with_google(google_data: GoogleAuthRequest, db: Session = Depen
         print(f"Google auth error: {str(e)}")  # Add logging for debugging
         raise HTTPException(status_code=400, detail=f"Google authentication failed: {str(e)}")
 
-@app.post("/verify-email/{token}")
+@app.post("/api/v1/verify-email/{token}")
 async def verify_email(token: str, db: Session = Depends(get_db)):
     """Verify user's email address"""
     user = db.query(models.DBUser).filter(models.DBUser.verification_token == token).first()
@@ -333,7 +333,7 @@ async def verify_email(token: str, db: Session = Depends(get_db)):
     
     return {"message": "Email verified successfully"}
 
-@app.post("/token", response_model=Token)
+@app.post("/api/v1/token", response_model=Token)
 async def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db)
@@ -369,7 +369,7 @@ async def login_for_access_token(
         refresh_token=refresh_token
     )
 
-@app.post("/refresh-token", response_model=Token)
+@app.post("/api/v1/refresh-token", response_model=Token)
 async def refresh_token(token: str = None, refresh_data: dict = Body(None)):
     """Get a new access token using refresh token"""
     # Accept token from either query param or JSON body
@@ -415,7 +415,7 @@ async def refresh_token(token: str = None, refresh_data: dict = Body(None)):
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-@app.get("/users/me", response_model=User)
+@app.get("/api/v1/users/me", response_model=User)
 async def read_users_me(current_user: User = Depends(get_current_user)):
     """Get current user information"""
     return current_user
@@ -440,7 +440,7 @@ def find_user_by_id(user_id: str, db: Session = Depends(get_db)):
         email_verified=db_user.email_verified
     )
 
-@app.post("/password-reset/request")
+@app.post("/api/v1/password-reset/request")
 async def request_password_reset(email: str, db: Session = Depends(get_db)):
     """Request a password reset token"""
     user = db.query(models.DBUser).filter(models.DBUser.email == email).first()
@@ -458,7 +458,7 @@ async def request_password_reset(email: str, db: Session = Depends(get_db)):
     # For now, just return the token
     return {"reset_token": reset_token, "message": "Reset token generated"}
 
-@app.post("/password-reset/confirm")
+@app.post("/api/v1/password-reset/confirm")
 async def confirm_password_reset(
     token: str,
     new_password: str,
@@ -488,7 +488,7 @@ async def confirm_password_reset(
     except JWTError:
         raise HTTPException(status_code=400, detail="Invalid or expired token")
 
-@app.put("/users/me", response_model=User)
+@app.put("/api/v1/users/me", response_model=User)
 async def update_user(
     user_update: dict,
     current_user: User = Depends(get_current_user),
@@ -532,11 +532,11 @@ async def update_user(
         email_verified=db_user.email_verified
     )
 
-@app.get("/health")
+@app.get("/api/v1/health")
 def health_check():
     return {"status": "healthy"}
 
-@app.get("/db-check")
+@app.get("/api/v1/db-check")
 def db_connection_check(db = Depends(get_db)):
     # Simply using the db dependency will check the connection
     # If it fails, FastAPI will return an error
