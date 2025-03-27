@@ -101,6 +101,14 @@ This service handles all authentication concerns for the Entrecore ecosystem, in
 
 - `POST /verify-email/{token}` - Verify email address
 
+## Google OAuth Authentication
+
+The service supports the client-side method of Google authentication:
+
+- Frontend handles Google authentication directly
+- Frontend sends the Google token to `/api/v1/signup/google`
+- Backend verifies the token and returns user data with a valid application token
+
 ## Database Migrations with Alembic
 
 ### Initial Setup
