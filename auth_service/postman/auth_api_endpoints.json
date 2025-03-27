@@ -30,9 +30,9 @@
               "raw": "{\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"phone_number\": \"+254712345678\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/signup",
+              "raw": "{{baseUrl}}/api/v1/signup",
               "host": ["{{baseUrl}}"],
-              "path": ["signup"]
+              "path": ["api", "v1", "signup"]
             },
             "description": "First step of the user registration process. Collects basic user information."
           },
@@ -52,9 +52,9 @@
                   "raw": "{\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"phone_number\": \"+254712345678\"\n}"
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/signup",
+                  "raw": "{{baseUrl}}/api/v1/signup",
                   "host": ["{{baseUrl}}"],
-                  "path": ["signup"]
+                  "path": ["api", "v1", "signup"]
                 }
               },
               "status": "OK",
@@ -85,9 +85,9 @@
               "raw": "{\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"SecurePassword123!\",\n  \"confirm_password\": \"SecurePassword123!\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/signup/set-password",
+              "raw": "{{baseUrl}}/api/v1/signup/set-password",
               "host": ["{{baseUrl}}"],
-              "path": ["signup", "set-password"]
+              "path": ["api", "v1", "signup", "set-password"]
             },
             "description": "Second step of the user registration process. Sets the user's password and completes the registration."
           },
@@ -107,9 +107,9 @@
                   "raw": "{\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"SecurePassword123!\",\n  \"confirm_password\": \"SecurePassword123!\"\n}"
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/signup/set-password",
+                  "raw": "{{baseUrl}}/api/v1/signup/set-password",
                   "host": ["{{baseUrl}}"],
-                  "path": ["signup", "set-password"]
+                  "path": ["api", "v1", "signup", "set-password"]
                 }
               },
               "status": "OK",
@@ -140,9 +140,9 @@
               "raw": "{\n  \"token\": \"google_oauth_token_here\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/signup/google",
+              "raw": "{{baseUrl}}/api/v1/signup/google",
               "host": ["{{baseUrl}}"],
-              "path": ["signup", "google"]
+              "path": ["api", "v1", "signup", "google"]
             },
             "description": "Register a new user with Google OAuth token or login an existing user."
           },
@@ -162,9 +162,9 @@
                   "raw": "{\n  \"token\": \"google_oauth_token_here\"\n}"
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/signup/google",
+                  "raw": "{{baseUrl}}/api/v1/signup/google",
                   "host": ["{{baseUrl}}"],
-                  "path": ["signup", "google"]
+                  "path": ["api", "v1", "signup", "google"]
                 }
               },
               "status": "OK",
@@ -211,9 +211,9 @@
               ]
             },
             "url": {
-              "raw": "{{baseUrl}}/token",
+              "raw": "{{baseUrl}}/api/v1/token",
               "host": ["{{baseUrl}}"],
-              "path": ["token"]
+              "path": ["api", "v1", "token"]
             },
             "description": "Authenticate a user and get access and refresh tokens."
           },
@@ -244,9 +244,9 @@
                   ]
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/token",
+                  "raw": "{{baseUrl}}/api/v1/token",
                   "host": ["{{baseUrl}}"],
-                  "path": ["token"]
+                  "path": ["api", "v1", "token"]
                 }
               },
               "status": "OK",
@@ -277,9 +277,9 @@
               "raw": "{\n  \"token\": \"refresh_token_here\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/refresh-token",
+              "raw": "{{baseUrl}}/api/v1/refresh-token",
               "host": ["{{baseUrl}}"],
-              "path": ["refresh-token"]
+              "path": ["api", "v1", "refresh-token"]
             },
             "description": "Get a new access token using a refresh token."
           },
@@ -299,9 +299,9 @@
                   "raw": "{\n  \"token\": \"refresh_token_here\"\n}"
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/refresh-token",
+                  "raw": "{{baseUrl}}/api/v1/refresh-token",
                   "host": ["{{baseUrl}}"],
-                  "path": ["refresh-token"]
+                  "path": ["api", "v1", "refresh-token"]
                 }
               },
               "status": "OK",
@@ -328,9 +328,9 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/logout",
+              "raw": "{{baseUrl}}/api/v1/logout",
               "host": ["{{baseUrl}}"],
-              "path": ["logout"]
+              "path": ["api", "v1", "logout"]
             },
             "description": "Logout a user by invalidating their token."
           },
@@ -346,9 +346,9 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{baseUrl}}/logout",
+                  "raw": "{{baseUrl}}/api/v1/logout",
                   "host": ["{{baseUrl}}"],
-                  "path": ["logout"]
+                  "path": ["api", "v1", "logout"]
                 }
               },
               "status": "OK",
@@ -380,9 +380,9 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/users/me",
+              "raw": "{{baseUrl}}/api/v1/users/me",
               "host": ["{{baseUrl}}"],
-              "path": ["users", "me"]
+              "path": ["api", "v1", "users", "me"]
             },
             "description": "Get information about the currently authenticated user."
           },
@@ -398,9 +398,9 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{baseUrl}}/users/me",
+                  "raw": "{{baseUrl}}/api/v1/users/me",
                   "host": ["{{baseUrl}}"],
-                  "path": ["users", "me"]
+                  "path": ["api", "v1", "users", "me"]
                 }
               },
               "status": "OK",
@@ -435,9 +435,9 @@
               "raw": "{\n  \"full_name\": \"John D. Doe\",\n  \"first_name\": \"John\",\n  \"last_name\": \"D. Doe\",\n  \"email\": \"john.d.doe@example.com\",\n  \"phone_number\": \"+254712345679\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/users/me",
+              "raw": "{{baseUrl}}/api/v1/users/me",
               "host": ["{{baseUrl}}"],
-              "path": ["users", "me"]
+              "path": ["api", "v1", "users", "me"]
             },
             "description": "Update the current user's profile information."
           },
@@ -461,9 +461,9 @@
                   "raw": "{\n  \"full_name\": \"John D. Doe\",\n  \"first_name\": \"John\",\n  \"last_name\": \"D. Doe\",\n  \"email\": \"john.d.doe@example.com\",\n  \"phone_number\": \"+254712345679\"\n}"
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/users/me",
+                  "raw": "{{baseUrl}}/api/v1/users/me",
                   "host": ["{{baseUrl}}"],
-                  "path": ["users", "me"]
+                  "path": ["api", "v1", "users", "me"]
                 }
               },
               "status": "OK",
@@ -485,9 +485,9 @@
             "method": "POST",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/verify-email/{token}",
+              "raw": "{{baseUrl}}/api/v1/verify-email/{token}",
               "host": ["{{baseUrl}}"],
-              "path": ["verify-email", "{token}"],
+              "path": ["api", "v1", "verify-email", "{token}"],
               "variable": [
                 {
                   "key": "token",
@@ -505,9 +505,9 @@
                 "method": "POST",
                 "header": [],
                 "url": {
-                  "raw": "{{baseUrl}}/verify-email/{token}",
+                  "raw": "{{baseUrl}}/api/v1/verify-email/{token}",
                   "host": ["{{baseUrl}}"],
-                  "path": ["verify-email", "{token}"],
+                  "path": ["api", "v1", "verify-email", "{token}"],
                   "variable": [
                     {
                       "key": "token",
@@ -540,9 +540,9 @@
             "method": "POST",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/password-reset/request?email=john.doe@example.com",
+              "raw": "{{baseUrl}}/api/v1/password-reset/request?email=john.doe@example.com",
               "host": ["{{baseUrl}}"],
-              "path": ["password-reset", "request"],
+              "path": ["api", "v1", "password-reset", "request"],
               "query": [
                 {
                   "key": "email",
@@ -559,9 +559,9 @@
                 "method": "POST",
                 "header": [],
                 "url": {
-                  "raw": "{{baseUrl}}/password-reset/request?email=john.doe@example.com",
+                  "raw": "{{baseUrl}}/api/v1/password-reset/request?email=john.doe@example.com",
                   "host": ["{{baseUrl}}"],
-                  "path": ["password-reset", "request"],
+                  "path": ["api", "v1", "password-reset", "request"],
                   "query": [
                     {
                       "key": "email",
@@ -589,9 +589,9 @@
             "method": "POST",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/password-reset/confirm?token=reset_token_here&new_password=NewSecurePassword123!&confirm_new_password=NewSecurePassword123!",
+              "raw": "{{baseUrl}}/api/v1/password-reset/confirm?token=reset_token_here&new_password=NewSecurePassword123!&confirm_new_password=NewSecurePassword123!",
               "host": ["{{baseUrl}}"],
-              "path": ["password-reset", "confirm"],
+              "path": ["api", "v1", "password-reset", "confirm"],
               "query": [
                 {
                   "key": "token",
@@ -616,9 +616,9 @@
                 "method": "POST",
                 "header": [],
                 "url": {
-                  "raw": "{{baseUrl}}/password-reset/confirm?token=reset_token_here&new_password=NewSecurePassword123!&confirm_new_password=NewSecurePassword123!",
+                  "raw": "{{baseUrl}}/api/v1/password-reset/confirm?token=reset_token_here&new_password=NewSecurePassword123!&confirm_new_password=NewSecurePassword123!",
                   "host": ["{{baseUrl}}"],
-                  "path": ["password-reset", "confirm"],
+                  "path": ["api", "v1", "password-reset", "confirm"],
                   "query": [
                     {
                       "key": "token",
@@ -645,6 +645,85 @@
                 }
               ],
               "body": "{\n  \"message\": \"Password updated successfully\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Health and Diagnostics",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "health"]
+            },
+            "description": "Check if the service is running properly."
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/health",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "v1", "health"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"healthy\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Database Connection Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/db-check",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "db-check"]
+            },
+            "description": "Check if the service can connect to the database."
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/db-check",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "v1", "db-check"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"database\": \"connected\"\n}"
             }
           ]
         }

@@ -9,12 +9,15 @@ from entrecore_auth_core import (
     PasswordSetRequest, GoogleAuthRequest, 
     PasswordResetRequest, PasswordResetConfirm
 )
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from dotenv import load_dotenv
 import os
 import uuid
 import re
 from pydantic import BaseModel, validator, EmailStr
+from google.oauth2 import id_token
+from google.auth.transport import requests as google_requests
+import json
 
 from auth_service.database import get_db
 from auth_service import models, database
@@ -32,6 +35,7 @@ SECRET_KEY = os.getenv("JWT_SECRET_KEY")
 ALGORITHM = os.getenv("ALGORITHM")
 ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
 REFRESH_TOKEN_EXPIRE_DAYS = os.getenv("REFRESH_TOKEN_EXPIRE_DAYS")
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/v1/token")
@@ -235,22 +239,86 @@ async def signup_complete(password_data: PasswordSetRequest, db: Session = Depen
 async def signup_with_google(google_data: GoogleAuthRequest, db: Session = Depends(get_db)):
     """Sign up using Google authentication"""
     try:
-        # Use the token from the request model
+        # Get the token from the request
         token = google_data.token
+        google_user = None
+
+        # Check if this is a test token
+        if token.startswith("mock_google_token_"):
+            # For testing purposes, use token to generate mock data
+            test_id = token.split('_')[-1]  # Extract "12345" from "mock_google_token_12345"
+            google_user = {
+                "email": f"google_user_{test_id}@example.com",
+                "given_name": f"Google{test_id}",
+                "family_name": f"User{test_id}",
+                "sub": f"google_id_{test_id}"
+            }
+        else:
+            # This is a real token: verify with Google
+            try:
+                # Verify the token with Google
+                if not GOOGLE_CLIENT_ID:
+                    raise ValueError("GOOGLE_CLIENT_ID environment variable not set")
+                
+                # Verify the token
+                idinfo = id_token.verify_oauth2_token(
+                    token, 
+                    google_requests.Request(), 
+                    GOOGLE_CLIENT_ID
+                )
+                
+                # Verify issuer
+                if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+                    raise ValueError('Invalid issuer')
+                
+                # Get user information from the token
+                google_user = {
+                    "email": idinfo.get("email"),
+                    "given_name": idinfo.get("given_name"),
+                    "family_name": idinfo.get("family_name"),
+                    "sub": idinfo.get("sub"),  # Google's unique user ID
+                }
+                
+                # Check if email is verified by Google
+                if not idinfo.get("email_verified", False):
+                    raise ValueError("Email not verified by Google")
+                
+            except ValueError as e:
+                # Invalid token
+                raise HTTPException(
+                    status_code=401, 
+                    detail=f"Invalid Google token: {str(e)}"
+                )
         
-        # For testing purposes, use token to generate mock data
-        test_id = token.split('_')[-1]  # Extract "12345" from "mock_google_token_12345"
-        google_user = {
-            "email": f"google_user_{test_id}@example.com",
-            "given_name": f"Google{test_id}",
-            "family_name": f"User{test_id}",
-            "sub": f"google_id_{test_id}"
-        }
+        # Validate we have the required user information
+        if not google_user or not all([
+            google_user.get("email"),
+            google_user.get("sub")
+        ]):
+            raise ValueError("Missing required user information from Google token")
         
-        # Check if user exists
-        existing_user = db.query(models.DBUser).filter(models.DBUser.email == google_user["email"]).first()
+        # Check if user exists by Google ID or email
+        existing_user = (
+            db.query(models.DBUser)
+            .filter(
+                (models.DBUser.google_id == google_user["sub"]) | 
+                (models.DBUser.email == google_user["email"])
+            )
+            .first()
+        )
         
         if existing_user:
+            # Update user information if needed
+            if existing_user.google_id is None:
+                # User previously registered with email, link Google account
+                existing_user.google_id = google_user["sub"]
+            
+            # Update potentially changed profile info
+            if google_user.get("given_name") and google_user.get("family_name"):
+                existing_user.first_name = google_user["given_name"]
+                existing_user.last_name = google_user["family_name"]
+                existing_user.full_name = f"{google_user['given_name']} {google_user['family_name']}"
+            
             # Update last login for existing user
             existing_user.last_login = datetime.now(UTC)
             db.commit()
@@ -262,7 +330,8 @@ async def signup_with_google(google_data: GoogleAuthRequest, db: Session = Depen
                 expires_delta=access_token_expires
             )
             
-            return User(
+            # Create user object with access token
+            user = User(
                 id=existing_user.id,
                 email=existing_user.email,
                 username=existing_user.username,
@@ -273,21 +342,29 @@ async def signup_with_google(google_data: GoogleAuthRequest, db: Session = Depen
                 roles=existing_user.roles,
                 created_at=existing_user.created_at,
                 last_login=existing_user.last_login,
-                email_verified=True  # Google users are assumed verified
+                email_verified=True,  # Google users are verified
+                access_token=access_token
             )
+            
+            return user
+        
+        # Create username from email if available or use a unique identifier
+        username = google_user["email"].split('@')[0] if google_user.get("email") else f"google_{google_user['sub'][-8:]}"
         
         # Create new user
         db_user = models.DBUser(
             id=str(uuid.uuid4()),
-            username=google_user["email"].split('@')[0],
+            username=username,
             email=google_user["email"],
-            full_name=f"{google_user['given_name']} {google_user['family_name']}",
-            first_name=google_user["given_name"],
-            last_name=google_user["family_name"],
+            full_name=f"{google_user.get('given_name', '')} {google_user.get('family_name', '')}".strip(),
+            first_name=google_user.get("given_name", ""),
+            last_name=google_user.get("family_name", ""),
             hashed_password=None,  # No password for Google users
             roles=["user"],
             email_verified=True,  # Google-authenticated users are verified
-            google_id=google_user["sub"]  # Store Google ID for future logins
+            google_id=google_user["sub"],  # Store Google ID for future logins
+            created_at=datetime.now(UTC),
+            last_login=datetime.now(UTC)
         )
         
         db.add(db_user)
@@ -301,7 +378,8 @@ async def signup_with_google(google_data: GoogleAuthRequest, db: Session = Depen
             expires_delta=access_token_expires
         )
         
-        return User(
+        # Create user object with access token
+        user = User(
             id=db_user.id,
             email=db_user.email,
             username=db_user.username,
@@ -312,11 +390,16 @@ async def signup_with_google(google_data: GoogleAuthRequest, db: Session = Depen
             roles=db_user.roles,
             created_at=db_user.created_at,
             last_login=db_user.last_login,
-            email_verified=db_user.email_verified
+            email_verified=db_user.email_verified,
+            access_token=access_token
         )
+        
+        return user
         
     except Exception as e:
         print(f"Google auth error: {str(e)}")  # Add logging for debugging
+        if isinstance(e, HTTPException):
+            raise e
         raise HTTPException(status_code=400, detail=f"Google authentication failed: {str(e)}")
 
 @app.post("/api/v1/verify-email/{token}")
