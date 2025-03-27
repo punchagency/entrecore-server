@@ -22,5 +22,4 @@ def test_docker_db_connection():
     assert response.status_code == 200
     assert response.json()["database"] == "connected"
 
-# You can add more Docker-specific tests here
-# or copy your main test logic with Docker-specific configuration
+
