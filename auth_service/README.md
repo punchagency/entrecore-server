@@ -30,7 +30,7 @@ This service handles all authentication concerns for the Entrecore ecosystem, in
 ### Prerequisites
 
 - Python 3.9+
-- PostgreSQL database
+- MySQL database
 - Poetry (dependency management)
 
 ### Installation
@@ -43,6 +43,7 @@ This service handles all authentication concerns for the Entrecore ecosystem, in
 
 2. Install dependencies:
    ```bash
+   sudo apt-get install pkg-config python3-dev default-libmysqlclient-dev build-essential
    poetry install
    ```
 
